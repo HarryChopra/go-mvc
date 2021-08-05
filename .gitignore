@@ -15,7 +15,9 @@ builds/**/images/*
 # Anything under these folders #
 ################################
 **/tmp/
+**/_tmp/
 **/exp/
+**/_exp/
 
 # dotenv environment variable files
 ###################################
