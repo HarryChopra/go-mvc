@@ -5,9 +5,18 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/harrychopra/go-mvc/domain"
 	"github.com/harrychopra/go-mvc/services"
 	"github.com/harrychopra/go-mvc/utils"
 )
+
+var (
+	userServ services.UserService
+)
+
+func init() {
+	userServ = services.NewUserService(domain.NewUserDao())
+}
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -24,7 +33,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		w.Write(bApiErr)
 		return
 	}
-	user, apiErr := services.GetUser(userId)
+	user, apiErr := userServ.GetUser(userId)
 	if apiErr != nil {
 		bApiErr, _ := json.Marshal(apiErr)
 		w.WriteHeader(apiErr.StatusCode)
