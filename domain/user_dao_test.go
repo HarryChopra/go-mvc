@@ -6,9 +6,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	userDaoTest = NewUserDao()
+)
+
 func TestGetUser_userNotFound(t *testing.T) {
 	var userId int64 = 0
-	user, err := GetUser(userId)
+	user, err := userDaoTest.GetUser(userId)
 	assert.Nil(t, user, "GetUser(%d) user", userId)
 	errNotNil := assert.NotNil(t, err, "GetUser(%d) err", userId)
 	if errNotNil {
@@ -20,7 +24,7 @@ func TestGetUser_userNotFound(t *testing.T) {
 
 func TestGetUser_userFound(t *testing.T) {
 	var userId int64 = 123
-	user, err := GetUser(userId)
+	user, err := userDaoTest.GetUser(userId)
 	userNotNil := assert.NotNil(t, user, "GetUser(%d) user", userId)
 	if userNotNil {
 		assert.Equal(t, "James", user.First, "GetUser(%d) user.First", userId)

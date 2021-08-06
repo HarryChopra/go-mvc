@@ -2,10 +2,21 @@ package domain
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/harrychopra/go-mvc/utils"
 )
+
+type UserDao interface {
+	GetUser(int64) (*User, *utils.ApplicationError)
+}
+
+type userDaoImpl struct{}
+
+func NewUserDao() UserDao {
+	return &userDaoImpl{}
+}
 
 var (
 	users = map[int64]*User{
@@ -23,7 +34,8 @@ var (
 	}
 )
 
-func GetUser(userId int64) (*User, *utils.ApplicationError) {
+func (u *userDaoImpl) GetUser(userId int64) (*User, *utils.ApplicationError) {
+	log.Println("requesting db") // TODO: Remove. For mock test purposes.
 	user := users[userId]
 	if user != nil {
 		return user, nil
