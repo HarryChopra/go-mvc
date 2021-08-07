@@ -1,32 +1,31 @@
 package domain
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestGetUser_userNotFound(t *testing.T) {
 	var userId int64 = 0
 	user, err := GetUser(userId)
-	if user != nil {
-		t.Errorf("GetUser(%d) user: got = %v, want = %v", userId, user, nil)
-	}
-	if err == nil {
-		t.Fatalf("GetUser(%d) err: got = %v", userId, err)
-	}
-	if err.StatusCode != 404 {
-		t.Errorf("GetUser(%d) err.StatusCode: got = %d, want = %d", userId, err.StatusCode, 404)
+	assert.Nil(t, user, "GetUser(%d) user", userId)
+	errNotNil := assert.NotNil(t, err, "GetUser(%d) err", userId)
+	if errNotNil {
+		assert.Equal(t, "user 0 not found", err.Message, "GetUser(%d) err.Message", userId)
+		assert.Equal(t, 404, err.StatusCode, "GetUser(%d) err.StatusCode", userId)
+		assert.Equal(t, "not found", err.Code, "GetUser(%d) err.Code", userId)
 	}
 }
 
 func TestGetUser_userFound(t *testing.T) {
 	var userId int64 = 123
 	user, err := GetUser(userId)
-	if user == nil {
-		t.Fatalf("GetUser(%d) user: got = %v", userId, user)
+	userNotNil := assert.NotNil(t, user, "GetUser(%d) user", userId)
+	if userNotNil {
+		assert.Equal(t, "James", user.First, "GetUser(%d) user.First", userId)
+		assert.Equal(t, "Bond", user.Last, "GetUser(%d) user.Last", userId)
+		assert.Equal(t, "agent_007@mi6.gov.uk", user.Email, "GetUser(%d) user.Email", userId)
 	}
-	if user.First != "James" {
-		t.Errorf("GetUser(%d) user: got = %q, want = %q", userId, user.First, "James")
-	}
-	// ... User: assert other fields
-	if err != nil {
-		t.Fatalf("GetUser(%d) err: got = %v, want = %v", userId, err, nil)
-	}
+	assert.Nil(t, err, "GetUser(%d) err", userId)
 }
